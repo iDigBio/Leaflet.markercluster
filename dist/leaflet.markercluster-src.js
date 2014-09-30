@@ -30,7 +30,7 @@ L.MarkerClusterGroup = L.FeatureGroup.extend({
 
 		//Increase to increase the distance away that spiderfied markers appear from the center
 		spiderfyDistanceMultiplier: 1,
-
+		minZoomBeforeSpiderfy: 9,
 		// When bulk adding layers, adds markers in chunks. Means addLayers may not add all the layers in the call, others will be loaded during setTimeouts
 		chunkedLoading: false,
 		chunkInterval: 200, // process markers for a maximum of ~ n milliseconds (then trigger the chunkProgress callback)
@@ -660,10 +660,12 @@ L.MarkerClusterGroup = L.FeatureGroup.extend({
 
 	_zoomOrSpiderfy: function (e) {
 		var map = this._map;
-		if (map.getMaxZoom() === map.getZoom()) {
-			if (this.options.spiderfyOnMaxZoom) {
+
+		//updated for iDigBio
+		if ( (map.getMaxZoom() === map.getZoom()) || map.getZoom() >= this.options.minZoomBeforeSpiderfy) {
+			//if (this.options.spiderfyOnMaxZoom) {
 				e.layer.spiderfy();
-			}
+			//}
 		} else if (this.options.zoomToBoundsOnClick) {
 			e.layer.zoomToBounds();
 		}
